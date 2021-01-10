@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<title>JSON DB Project</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script
+src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script
+src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="http://login2explore.com/jpdb/resources/js/0.0.3/jpdb-commons.js"></script
+</head>
+<body>
+<div class="container">
+<form method="post" id="form">
+
+<fieldset>
+<legend align="center">Registeration form</legend>
+<fieldset>
+<legend>Personal Details</legend>
+<div class="form-group">
+<label for="name">Enter Name: </label> <input type="text" name="name" id="name" class="form-control" placeholder="Enter your name" required></div>
+<div class="form-group">
+<label for="email">Enter email: </label><input type="email" name="email" id="email" class="form-control" placeholder="Enter your email" required></div>
+<div class="form-group">
+<label >Gender: </label><input type="text" name="gender" class="form-control" placeholder="Enter gender" id="gender" required></div>
+<div class="form-group">
+<label for="pwd">Password: </label><input type="password" name="pass" class="form-control" placeholder="Enter password" id="pwd" required></div>
+<div class="form-group">
+<label for="pwd1">Confirm password:</label><input type="password" class="form-control" name="pass1" placeholder="Enter password" id="pwd1" required></div>
+</fieldset>
+
+<br>
+<fieldset>
+<legend>Contact Details:</legend>
+<div class="form-group">
+<label for="phone">Phone No.:</label>
+<input type="text" name="phone" class="form-control" placeholder="Enter your phone no." id="phone" width="200px" height="30px" ></div>
+<div class="form-group">
+<label for="add">Address:</label>
+<textarea class="form-control" name="add" rows="5" cols="50" id="add">
+</textarea></div>
+</fieldset>
+<br>
+<center>
+<input type="button" class="btn btn-primary" onclick="save();" value="Submit" name="submit">
+<input type="button" class="btn btn-primary" value="Reset" onclick="reset();" name="reset">
+</center>
+
+</fieldset>
+
+</form>
+</div>
+<script>
+$("#name").focus();
+function validateAndGetFormData() {
+var name = $("#name").val();
+if (name === "") {
+alert("Name required");
+$("#name").focus();
+return "";
+}
+var email = $("#email").val();
+if (email === "") {
+alert("Email Id is Required");
+$("#email").focus();
+return "";
+}
+var gender = $("#gender").val();
+if (gender !== "male" && gender !== "female" ) {
+alert("Enter valid value for gender");
+$("#gender").focus();
+
+return "";
+}
+var pwd = $("#pwd").val();
+if (pwd === "") {
+alert("Password is required");
+$("#pwd").focus();
+
+return "";
+}
+var pwd1 = $("#pwd1").val();
+if (pwd !== pwd1) {
+alert("Password does not match");
+$("#pwd1").focus();
+
+return "";
+}
+var phone = $("#phone").val();
+if (phone.length<10) {
+alert("Enter correct phone number");
+$("#phone").focus();
+
+return "";
+}
+var add = $("#add").val();
+var jsonStrObj = {
+email: email,
+name: name,
+password: pwd,
+gender: gender,
+phone: phone,
+address: add
+};
+return JSON.stringify(jsonStrObj);
+}
+// This method is used to create PUT Json request.
+
+function reset() {
+$("#name").val("")
+$("#email").val("");
+$("#pwd").val("");
+$("#pwd1").val("");
+$("#gender").val("");
+$("#phone").val("");
+$("#add").val("");
+}
+function save() {
+var jsonStr = validateAndGetFormData();
+if (jsonStr === "") {
+return;
+}
+var putReqStr = createPUTRequest("90937261|-31948794393971215|90932857",
+jsonStr, "student", "stud");
+alert(putReqStr);
+jQuery.ajaxSetup({async: false});
+var resultObj = executeCommandAtGivenBaseUrl(putReqStr,
+"http://api.login2explore.com:5577", "/api/iml");
+alert(JSON.stringify(resultObj));
+jQuery.ajaxSetup({async: true});
+reset();
+}
+</script>
+</body>
+</html>
